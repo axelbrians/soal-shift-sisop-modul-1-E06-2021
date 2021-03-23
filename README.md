@@ -1,1 +1,5 @@
-# soal-shift-sisop-modul-1-E06-2021
+# Soal Shift Sisop Modul 1 2021
+
+
+Kelompok E-06
+- Axel Briano Suherik (05111940000137)

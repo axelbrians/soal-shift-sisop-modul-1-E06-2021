@@ -1,0 +1,2 @@
+# m h  dom mon dow   <path> change to your need
+0 20 1-31/7,2-31/4 * * cd ~/dev/soal-shift-sisop-modul-1-E06-2021/soal3 && bash soal3b.sh

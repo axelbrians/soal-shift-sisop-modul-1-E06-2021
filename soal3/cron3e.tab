@@ -1,0 +1,4 @@
+# m h  dom mon dow   command
+0 7 * * 1-5 cd ~/dev/soal-shift-sisop-modul-1-E06-2021/soal3 && bash soal3d.sh
+
+0 18 * * 1-5 cd ~/dev/soal-shift-sisop-modul-1-E06-2021/soal3 && unzip -P `date +\%m\%d\%Y` Koleksi.zip && rm Koleksi.zip

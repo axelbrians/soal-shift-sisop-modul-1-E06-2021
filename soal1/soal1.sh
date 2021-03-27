@@ -10,4 +10,4 @@ grep "ERROR" syslog.log | cut -f7- -d' ' | cut -f1 -d'(' | sort | uniq -c
 printf 'Jumlah LOG ERROR:\n'
 grep "ERROR" syslog.log | cut -f2 -d'(' | cut -f1 -d')' | sort | uniq -c
 printf 'Jumlah LOG INFO:\n'
-grep "ERROR" syslog.log | cut -f2 -d'(' | cut -f1 -d')' | sort | uniq -c
+grep "INFO" syslog.log | cut -f2 -d'(' | cut -f1 -d')' | sort | uniq -c

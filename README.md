@@ -84,3 +84,81 @@ Keterangan :
 - `'"$var"'` digunakan untuk memasukkan variable bash kedalam sintaks awk.
 - `${array[@]}` digunakan untuk mengeluarkan semua isi array.
 - Script soal2.sh dijalankan dengan menerima argument berupa file csv yang akan direkap.
+
+## Soal 3
+Kuuhaku adalah orang yang sangat suka mengoleksi foto-foto digital, namun Kuuhaku juga merupakan seorang yang pemalas sehingga ia tidak ingin repot-repot mencari foto, selain itu ia juga seorang pemalu, sehingga ia tidak ingin ada orang yang melihat koleksinya tersebut, sayangnya ia memiliki teman bernama Steven yang memiliki rasa kepo yang luar biasa. Kuuhaku pun memiliki ide agar Steven tidak bisa melihat koleksinya, serta untuk mempermudah hidupnya, yaitu dengan meminta bantuan kalian. Idenya adalah :
+
+## a. 
+Membuat script untuk **mengunduh** 23 gambar dari "https://loremflickr.com/320/240/kitten" serta **menyimpan** log-nya ke file "Foto.log". Karena gambar yang diunduh acak, ada kemungkinan gambar yang sama terunduh lebih dari sekali, oleh karena itu kalian harus **menghapus** gambar yang sama (tidak perlu mengunduh gambar lagi untuk menggantinya). Kemudian **menyimpan** gambar-gambar tersebut dengan nama "Koleksi_XX" dengan nomor yang berurutan **tanpa ada nomor yang hilang** (contoh : Koleksi_01, Koleksi_02, ...)
+
+### Penjelasan Soal
+* Diminta untuk mengunduh 23 kali dari url https://loremflickr.com/320/240/kitten
+* Jika ada foto yang sama maka dihapus. 
+* Log dari mengunduh disimpan pada `Foto.log`
+* Format penamaan foto yang di unduh `Koleksi_XX` XX mulai dari 00 hingga 23.
+
+### Solution
+Menjalankan `wget -nv -O Koleksi_XX https://loremflickr.com/320/240/kitten 2>&1 | tee -a Foto.log` sebanyak 23 kali. XX pada `Koleksi_XX` diganti dengan urutan angka yang sesuai.
+Cara mencari tahu foto yang kembar atau tidak adalah dengan melakukan awk setiap kali menjalankan `wget`, melakukan split url hasil download pada `Foto.log` `2021-04-01 19:32:25 URL:https://loremflickr.com/cache/resized/65535_50739141646_a2e146d245_320_240_nofilter.jpg [18583/18583] -> "Kitten_01.jpeg" [1]`, diambil part pada `a2e146d245` untuk tiap baris log. Lalu bandingkan log paling akhir dengan semua log sebelumnya. Jika ada yang sama, maka pada loop tersebut hapus foto yang baru di download.
+
+
+## b. 
+Karena Kuuhaku malas untuk menjalankan script tersebut secara manual, ia juga meminta kalian untuk menjalankan script tersebut **sehari sekali pada jam 8 malam** untuk tanggal-tanggal tertentu setiap bulan, yaitu dari **tanggal 1 tujuh hari sekali** (1,8,...), serta dari **tanggal 2 empat hari sekali**(2,6,...). Supaya lebih rapi, gambar yang telah diunduh beserta **log-nya**, **dipindahkan ke folder** dengan nama **tanggal unduhnya** dengan **format** "DD-MM-YYYY" (contoh : "13-03-2023").
+
+### Penjelasan Soal
+* Membuat crontab yang melakukan apa yang dilakukan oleh script **3a**.
+* Crontab dijalankan sehari sekali pada pukul 8 malam
+    * mulai tanggal 1 dan tiap 7 hari (1, 8, 15, ...)
+    * mulai tanggal 2 dan tiap 4 hari (2, 6, 10, ...)
+* Memindahkan foto yang diunduh ke file dengan format "DD-MM-YYYY" pada tanggal tersebut. ex: ("12-03-2021")
+
+### Solution
+Menggunakan script yang sama seperti 3a, hanya saja menambahkan kode untuk memindahkan foto yang telah diunduh dan `Foto.log`.
+Crontabnya cukup _straightforward_ untuk waktunya `0 20 1-31/7,2-31/4 * *` dan cukup pindah directore ke lokasi script `soal3b.sh` dan panggil scriptnya.
+
+## c.
+Agar kuuhaku tidak bosan dengan gambar anak kucing, ia juga memintamu untuk **mengunduh** gambar kelinci dari "https://loremflickr.com/320/240/bunny". Kuuhaku memintamu mengunduh gambar kucing dan kelinci secara **bergantian** (yang pertama bebas. contoh : tanggal 30 kucing > tanggal 31 kelinci > tanggal 1 kucing > ... ). Untuk membedakan folder yang berisi gambar kucing dan gambar kelinci, **nama folder diberi awalan** "Kucing_" atau "Kelinci_" (contoh : "Kucing_13-03-2023").
+
+### Penjelasan Soal
+* Download 23 foto dari kedua link yang disediakan yaitu https://loremflickr.com/320/240/kitten atau https://loremflickr.com/320/240/bunny.
+* Kedua link tersebut dipanggil secara bergantian tiap harinya.
+    * Misal tanggal 30 kucing -> tanggal 31 kelinci -> 1 kucing -> ...
+* Foto beserta log nya dipindahkan ke file dengan format
+    > `<Nama hewan>_DD-MM-YYYY`
+    > contoh Kucing-30-03-2021
+
+### Solution
+Script yang dipakai untuk download sama dengan 3b, namun dengan beberapa modifikasi. 
+* Harus mengetahui foto apa yang terakhir di download (Kucing/Kelinci), dengan melakukan awk pada directory script tersebut.
+* Jika jumlah foldernya sama (antara folder kucing dan kelinci), maka download Kucing (Karena bebas ingin download kucing/kelinci terlebih dahulu).
+* Cek tanggal terakhir folder foto pada directory. Jika waktunya download Kucing dari hasil di perintah sebelumnya, namun tanggal folder terakhir di download sama dengan tanggal hari ini. Maka download Kelinci, jika tanggalnya berbeda download Kucing.
+* Jika jumlah filenya berbeda, maka lakukan kebalikan dari dua perintah di atas ini.
+* Lalu panggil fungsi untuk memindahkan log dan foto yang baru diunduh sesuai link yang digunakan. Panggil fungsi date yang diformat sesuai soal untuk penamaan folder.
+
+## d.
+Untuk mengamankan koleksi Foto dari Steven, Kuuhaku memintamu untuk membuat script yang akan **memindahkan seluruh folder ke zip** yang diberi nama “Koleksi.zip” dan **mengunci** zip tersebut dengan **password** berupa tanggal saat ini dengan format "MMDDYYYY" (contoh : “03032003”).
+
+### Penjelasan Soal
+* Zip semua folder dari hasil script `soal3b.sh` dan `soal3c.sh`.
+* Zip dipasang password dengan format `MMDDYYYY` yang sesuai tanggal zip itu dipanggil.
+* Hapus folder yang baru saja di zip
+
+### Solution
+Panggil command `zip` pada scriptnya, dan imbuhi dengan password yang dipanggil menggunakan command `date`. Jangan lupa di reformat pemanggilan `date` nya. Kemudian hapus semua folder yang baru saja di zip.
+> keyPassword=$(date +"%m%d%Y")
+> zip -r -P "$keyPassword" Koleksi.zip *-*
+> rm -r *-*
+
+## e.
+Karena kuuhaku hanya bertemu Steven pada saat kuliah saja, yaitu setiap hari kecuali sabtu dan minggu, dari jam 7 pagi sampai 6 sore, ia memintamu untuk membuat koleksinya **ter-zip** saat kuliah saja, selain dari waktu yang disebutkan, ia ingin koleksinya **ter-unzip** dan **tidak ada file zip** sama sekali.
+
+### Penjelasan Soal
+* Membuat crontab yang dijadwalkan pada hari senin-jum'at
+    * pada jam 7 pagi
+    * pada jam 6 sore
+* Jam 7 pagi menjalankan command zip untuk script `soal3d.sh`
+* Jam 6 sore menjalankan command untuk unzip, dan hapus file zipnya.
+
+### Solution
+Terdapat dua crontab. Pertama untuk jam 7 pagi setiap senin-jum'at, `0 7 * * 1-5` memanggil script `soal3.sh`. Kedua `0 18 * * 1-5` meng-unzip file zip di directory tersebut. Lalu hapus .zip nya.
+> 0 18 * * 1-5 unzip -P `date +\%m\%d\%Y` && rm Koleksi.zip

@@ -162,3 +162,10 @@ Karena kuuhaku hanya bertemu Steven pada saat kuliah saja, yaitu setiap hari kec
 ### Solution
 Terdapat dua crontab. Pertama untuk jam 7 pagi setiap senin-jum'at, `0 7 * * 1-5` memanggil script `soal3.sh`. Kedua `0 18 * * 1-5` meng-unzip file zip di directory tersebut. Lalu hapus .zip nya.
 > 0 18 * * 1-5 unzip -P `date +\%m\%d\%Y` && rm Koleksi.zip
+
+### Kesulitan
+* Mencari cara untuk check foto yang diunduh ada yang kembar atau tidak. Akhirnya memutuskan dengan melakukan awk para url download nya, karena url sendiri adalah unique. Bisa digunakan untuk membandingkan.
+* Cara memecah url nya lumayan sulit banyak __trial and error__ mencari cara yang pas. 
+* Cara untuk mengetahui di directory tertentu ada file apa saja dan memasukannya ke awk, setelah tahu cara memasukkan hasil command ke awk lumayan memakan waktu untuk menemukan logic yang bisa menentukan menggunakan link yang mana diantara kucing dan kelinci.
+* Script `soal3c.sh` berakhir sangat panjang.
+* Memanggil fungsi date untuk dimasukan sebagai argumen password untuk zip. Mencari cara untuk memilih folder tertentu saja saat ingin melakukan zip.

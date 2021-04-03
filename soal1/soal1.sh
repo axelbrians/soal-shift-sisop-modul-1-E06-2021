@@ -17,7 +17,7 @@ echo
 
 #D
 echo Error,Count >> error_message.csv
-grep "ERROR" syslog.log | cut -f8- -d' ' | cut -f1 -d'(' | sort | uniq -c | sort -nr | while read count text
+grep "ERROR" syslog.log | cut -f7- -d' ' | cut -f1 -d'(' | sort | uniq -c | sort -nr | while read count text
 do
     echo $text,$count >> error_message.csv
 done

@@ -37,14 +37,14 @@ kousei01,2,2
 ryujin.1203,1,3
 ```
 Catatan :
-Setiap baris pada file syslog.log mengikuti pola berikut:
+Setiap baris pada file _syslog.log_ mengikuti pola berikut:
 ```
  <time> <hostname> <app_name>: <log_type> <log_message> (<username>)
 ```
 Tidak boleh menggunakan AWK
 
-#### **_Jawaban_**
-Pada soal nomor 1, diberikan data syslog.log yang berisikan data sebagai berikut:
+#### Jawaban:
+Pada soal nomor 1, diberikan data _syslog.log_ yang berisikan data sebagai berikut:
 ```
 . . .
 Jan 31 05:18:45 ubuntu.local ticky: ERROR Tried to add information to closed ticket (sri)
@@ -55,10 +55,10 @@ Jan 31 05:23:14 ubuntu.local ticky: INFO Commented on ticket [#1097] (breee)
 ### A.
 ```
 grep "ticky" syslog.log | cut -f6- -d' '
-printf '\n'
+echo
 ```
 Pada soal ini, diminta untuk mengumpulkan informasi dari setiap baris pada `syslog.log` berupa `<log_type> <log_message> (<username>)`.
-- `grep "ticky" syslog.log` digunakan untuk mengambil isi dari file `syslog.log` yang harus memiliki kata `ticky`
+- `grep "ticky" syslog.log` digunakan untuk mengambil isi dari file _syslog.log_ yang harus memiliki kata _ticky_
 - `cut -f6- -d' '` digunakan untuk memotong isi dari file dengan jarak tertentu dengan delimiter spasi " " dimulai dari field ke-6
 
 Hasil ketika dijalankan pada tampilan terminal
@@ -72,12 +72,12 @@ INFO Commented on ticket [#1097] (breee)
 ### B.
 ```
 grep "ERROR" syslog.log | cut -f7- -d' ' | cut -f1 -d'(' | sort | uniq -c
-printf '\n'
+echo
 ```
 Pada soal ini, diminta untuk mengumpulkan dan menampilkan jumlah kemunculan semua pesan error yang muncul.
-- `grep "ERROR" syslog.log` digunakan untuk mengambil isi dari file `syslog.log` yang harus memiliki kata `ERROR`
+- `grep "ERROR" syslog.log` digunakan untuk mengambil isi dari file _syslog.log_ yang harus memiliki kata _ERROR_
 - `cut -f7- -d' ' | cut -f1 -d'('` digunakan untuk memotong isi dari file dengan jarak tertentu dengan delimiter spasi " " dimulai dari field ke-7 dan diakhiri dengan demilimter kurung buka "(", dimana isi dari file mengandung pesan error dan mengabaikan usernamenya.
-- `sort | uniq -c` digunakan untuk mengurutkan isi dari file berdasarkan ASCII serta mengumpulkan dan menghitung banyak line yang sama.
+- `sort | uniq -c` digunakan untuk mengurutkan isi dari file berdasarkan _ASCII_ serta mengumpulkan dan menghitung banyak line yang sama.
 
 Hasil ketika dijalankan pada tampilan terminal
 ```
@@ -91,15 +91,15 @@ Hasil ketika dijalankan pada tampilan terminal
 
 ### C.
 ```
-printf 'Jumlah LOG ERROR per USER:\n'
+echo Jumlah LOG ERROR per USER
 grep "ERROR" syslog.log | cut -f2 -d'(' | cut -f1 -d')' | sort | uniq -c
-printf 'Jumlah LOG INFO per USER:\n'
+echo Jumlah LOG INFO per USER
 grep "INFO" syslog.log | cut -f2 -d'(' | cut -f1 -d')' | sort | uniq -c
-printf '\n'
+echo
 ```
 Pada soal ini, diminta untuk mengumpulkan dan menampilkan jumlah kemunculan log ERROR dan INFO untuk setiap user-nya
-- `grep "ERROR/INFO" syslog.log` digunakan untuk mengambil isi dari file `syslog.log` yang harus memiliki kata `ERROR/INFO`
-- `cut -f2 -d'(' | cut -f1 -d')'` digunakan untuk memotong isi dari file dengan jarak tertentu dengan delimiter kurung buka "(" dimulai dari field ke-7 dan diakhiri dengan demilimter kurung tutup ")", dimana isi dari file hanya mengandung username.
+- `grep "ERROR/INFO" syslog.log` digunakan untuk mengambil isi dari file _syslog.log_ yang harus memiliki kata _ERROR/INFO_
+- `cut -f2 -d'(' | cut -f1 -d')'` digunakan untuk memotong isi dari file dengan jarak tertentu dengan delimiter kurung buka "(" dimulai dari field ke-2 dan diakhiri dengan demilimter kurung tutup ")", dimana isi dari file hanya mengandung username.
 - `sort | uniq -c` digunakan untuk mengurutkan isi dari file berdasarkan ASCII serta mengumpulkan dan menghitung banyak line yang sama.
 
 Hasil ketika dijalankan pada tampilan terminal
@@ -126,11 +126,11 @@ done
 ```
 Pada soal ini, diminta untuk membuat file error_message.csv dengan header Error,Count dari data yang didapatkan pada soal B.
 - `echo Error,Count >> error_message.csv` digunakan untuk membuat file error_message.csv dan memasukkan data Error,Count sebagai header pada file tersebut.
-- `grep "ERROR" syslog.log` digunakan untuk mengambil isi dari file `syslog.log` yang harus memiliki kata `ERROR`
+- `grep "ERROR" syslog.log` digunakan untuk mengambil isi dari file _syslog.log_ yang harus memiliki kata _ERROR_
 - `cut -f8- -d' ' | cut -f1 -d'('` digunakan untuk memotong isi dari file dengan jarak tertentu dengan delimiter spasi " " dimulai dari field ke-8 dan diakhiri dengan demilimter kurung buka "(", dimana isi dari file mengandung pesan error dan mengabaikan usernamenya.
 - `sort | uniq -c` digunakan untuk mengurutkan isi dari file berdasarkan ASCII serta mengumpulkan dan menghitung banyak line yang sama.
 - `sort -nr` digunakan untuk mengurutkan data secara numerik dari yang terbesar ke terkecil.
-- `while read count text` digunakan untuk menyimpan nilai ke variabel count dan text yang berisikan, count jumlah kemunculan pesan `ERROR` dan text isi dari pesan tersebut.
+- `while read count text` digunakan untuk menyimpan nilai ke variabel count dan text yang berisikan, count jumlah kemunculan pesan _ERROR_ dan text isi dari pesan tersebut.
 - `echo $text,$count >> error_message.csv` digunakan untuk memasukkan data dari variabel text dan count ke file error_message.csv.
 
 ### E.
@@ -145,11 +145,11 @@ done
 ```
 Pada soal ini, diminta untuk membuat file user_statistic.csv dengan header Username,INFO,ERROR dari data yang didapatkan pada soal C.
 - `echo Username,INFO,ERROR >> user_statistic.csv` digunakan untuk membuat file user_statistic.csv dan memasukkan data Username,INFO,ERROR sebagai header pada file tersebut.
-- `grep "ticky" syslog.log` digunakan untuk mengambil isi dari file `syslog.log` yang harus memiliki kata `ticky`
-- `cut -f2 -d'(' | cut -f1 -d')'` digunakan untuk memotong isi dari file dengan jarak tertentu dengan delimiter kurung buka "(" dimulai dari field ke-7 dan diakhiri dengan demilimter kurung tutup ")", dimana isi dari file hanya mengandung username.
+- `grep "ticky" syslog.log` digunakan untuk mengambil isi dari file _syslog.log_ yang harus memiliki kata _ticky_
+- `cut -f2 -d'(' | cut -f1 -d')'` digunakan untuk memotong isi dari file dengan jarak tertentu dengan delimiter kurung buka "(" dimulai dari field ke-2 dan diakhiri dengan demilimter kurung tutup ")", dimana isi dari file hanya mengandung username.
 - `sort | uniq -c` digunakan untuk mengurutkan isi dari file berdasarkan ASCII serta mengumpulkan dan menghitung banyak line yang sama.
 - `while read count name` digunakan untuk menyimpan nilai ke variabel count dan text yang berisikan, count jumlah kemunculan pesan dan text isi dari pesan tersebut.
-- `` info/error=`grep "INFO/ERROR" syslog.log | grep -w "$name" | wc -l` `` variabel ini digunakan untuk mencari dan memisahkan pesan `INFO` dan `ERROR` pada file syslog.log, `grep -w "$name"` digunakan untuk mencari username yang sesuai dengan variabel name, `wc -l` digunakan untuk menghitung baris hasil dari grep data yang telah di saring
+- `` info/error=`grep "INFO/ERROR" syslog.log | grep -w "$name" | wc -l` `` variabel ini digunakan untuk mencari dan memisahkan pesan _INFO_ dan _ERROR_ pada file _syslog.log_, `grep -w "$name"` digunakan untuk mencari username yang sesuai dengan variabel name, `wc -l` digunakan untuk menghitung baris hasil dari grep data yang telah di saring.
 - `echo $name,$info,$error >> user_statistic.csv` digunakan untuk memasukkan data dari variabel name, info dan error ke file user_statistic.csv.
 
 ## Soal 2

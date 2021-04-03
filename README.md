@@ -191,8 +191,7 @@ Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedi
     printf "\n"
     awk -F'\t' 'NR>1{a[$8]++} END{c=99999999;for(b in a){d=a[b]<c?b:d;c=a[b]<c?a[b]:c;}printf("Tipe segmen customer yang penjualannya paling sedikit adalah %s dengan %d transaksi.\n",d,c);}' Laporan-TokoShiSop.tsv
     printf "\n"
-    awk -F'\t' 'NR>1{a[$13]=$21<a[$13]?$21:a[$13]} END{for(b in a){d=a[b]<c?b:d;c=a[b]<c?a[b]:c;}printf("Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedikit adalah %s dengan total keuntungan %.4f\n",d,c)}' Laporan-TokoShiSop.tsv
-
+    awk -F'\t' 'NR>1{a[$13]+=$21} END{c=99999999;for(b in a){d=a[b]<c?b:d;c=a[b]<c?a[b]:c;}printf("Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedikit adalah %s dengan total keuntungan %.4f\n",d,c)}' Laporan-TokoShiSop.tsv
     ```
 * hasil.txt
     ```text
@@ -206,7 +205,7 @@ Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedi
     
     Tipe segmen customer yang penjualannya paling sedikit adalah Home Office dengan 1783 transaksi.
     
-    Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedikit adalah East dengan total keuntungan -6599.9780
+    Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedikit adalah Central dengan total keuntungan 39706.3625
 
     ```
 
@@ -216,13 +215,11 @@ Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedi
 
     Pada soal **(c)** perlu dilakukan pemecahan dengan **\t** sebagai delimiter, lalu dilanjutkan dengan menghitung tiap unique id **kolom 8** dan menyimpan pada variabel **c** dan **d**
 
-    Pada soal **(d)** perlu dilakukan pemecahan dengan **\t** sebagai delimiter, lalu dilanjutkan dengan mencari profit terkecil pada **kolom 21**, lalu menyimpan nilai **profit terendah** pada variabel **c** dan juga nama **region terendah** pada variabel **d**.
+    Pada soal **(d)** perlu dilakukan pemecahan dengan **\t** sebagai delimiter, lalu dilanjutkan dengan menjumlahkan profit **kolom 21** dan menyimpannya pada array dengan index nama region **kolom 13**. Lalu dilanjutkan dengan iterasi untuk mencari **profit terendah** dan menyimpan index pada variabel **d** dan menyimpan value pada variabel **c**.
 
 Keterangan :
 
 - `-F "\t"` sintaks tersebut untuk mendefinisikan field separator secara manual dari sebuah \t atau blank spaces.
-- `'"$var"'` digunakan untuk memasukkan variable bash kedalam sintaks awk.
-- `${array[@]}` digunakan untuk mengeluarkan semua isi array.
 - Script soal2.sh dijalankan dengan menerima argument berupa file csv yang akan direkap.
 
 ## Soal 3

@@ -13,7 +13,7 @@ echo Jumlah LOG ERROR per USER
 grep "ERROR" syslog.log | cut -f2 -d'(' | cut -f1 -d')' | sort | uniq -c
 echo Jumlah LOG INFO per USER
 grep "INFO" syslog.log | cut -f2 -d'(' | cut -f1 -d')' | sort | uniq -c
-printf '\n'
+echo
 
 #D
 echo Error,Count >> error_message.csv

@@ -24,7 +24,7 @@ done
 
 #E
 echo Username,INFO,ERROR >> user_statistic.csv
-grep "ERROR" syslog.log | cut -f2 -d'(' | cut -f1 -d')' | sort | uniq -c | while read count name
+grep "ticky" syslog.log | cut -f2 -d'(' | cut -f1 -d')' | sort | uniq -c | while read count name
 do
     info=`grep "INFO" syslog.log | grep -w "$name" | wc -l`
     error=`grep "ERROR" syslog.log | grep -w "$name" | wc -l`

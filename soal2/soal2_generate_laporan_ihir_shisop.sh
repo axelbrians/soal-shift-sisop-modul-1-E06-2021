@@ -5,5 +5,5 @@ awk -F'\t' '(/Albuquerque/ && $3~/??-??-17/ && a[$7]==0) {print $7;a[$7]++}' Lap
 printf "\n"
 awk -F'\t' 'NR>1{a[$8]++} END{c=99999999;for(b in a){d=a[b]<c?b:d;c=a[b]<c?a[b]:c;}printf("Tipe segmen customer yang penjualannya paling sedikit adalah %s dengan %d transaksi.\n",d,c);}' Laporan-TokoShiSop.tsv
 printf "\n"
-awk -F'\t' 'NR>1{a[$13]=$21<a[$13]?$21:a[$13]} END{for(b in a){d=a[b]<c?b:d;c=a[b]<c?a[b]:c;}printf("Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedikit adalah %s dengan total keuntungan %.4f\n",d,c)}' Laporan-TokoShiSop.tsv
+awk -F'\t' 'NR>1{a[$13]+=$21} END{c=99999999;for(b in a){d=a[b]<c?b:d;c=a[b]<c?a[b]:c;}printf("Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedikit adalah %s dengan total keuntungan %.4f\n",d,c)}' Laporan-TokoShiSop.tsv
 

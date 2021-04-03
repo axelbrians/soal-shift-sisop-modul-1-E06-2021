@@ -2,16 +2,16 @@
 
 #A
 grep "ticky" syslog.log | cut -f6- -d' '
-printf '\n'
+echo
 
 #B
 grep "ERROR" syslog.log | cut -f7- -d' ' | cut -f1 -d'(' | sort | uniq -c
-printf '\n'
+echo
 
 #C
-printf 'Jumlah LOG ERROR per USER:\n'
+echo Jumlah LOG ERROR per USER
 grep "ERROR" syslog.log | cut -f2 -d'(' | cut -f1 -d')' | sort | uniq -c
-printf 'Jumlah LOG INFO per USER:\n'
+echo Jumlah LOG INFO per USER
 grep "INFO" syslog.log | cut -f2 -d'(' | cut -f1 -d')' | sort | uniq -c
 printf '\n'
 

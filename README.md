@@ -222,6 +222,10 @@ Keterangan :
 - `-F "\t"` sintaks tersebut untuk mendefinisikan field separator secara manual dari sebuah \t atau blank spaces.
 - Script soal2.sh dijalankan dengan menerima argument berupa file csv yang akan direkap.
 
+### Kesulitan
+* Saat memahami soal nomor 2d, saya mengira hanya mencari profit terkecil, ternyata diminta total profit terkecil.
+* Melakukan iterasi tiap-tiap baris pada kolom tertentu dari sebuah file **.tsv**.
+
 ## Soal 3
 Kuuhaku adalah orang yang sangat suka mengoleksi foto-foto digital, namun Kuuhaku juga merupakan seorang yang pemalas sehingga ia tidak ingin repot-repot mencari foto, selain itu ia juga seorang pemalu, sehingga ia tidak ingin ada orang yang melihat koleksinya tersebut, sayangnya ia memiliki teman bernama Steven yang memiliki rasa kepo yang luar biasa. Kuuhaku pun memiliki ide agar Steven tidak bisa melihat koleksinya, serta untuk mempermudah hidupnya, yaitu dengan meminta bantuan kalian. Idenya adalah :
 

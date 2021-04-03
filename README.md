@@ -12,6 +12,146 @@ Kelompok E-06
 * [Soal 2](https://github.com/axelbrians/soal-shift-sisop-modul-1-E06-2021#Soal-2)
 * [Soal 3](https://github.com/axelbrians/soal-shift-sisop-modul-1-E06-2021#Soal-3)
 
+## Soal 1
+Ryujin baru saja diterima sebagai IT support di perusahaan Bukapedia. Dia diberikan tugas untuk membuat laporan harian untuk aplikasi internal perusahaan, ticky. Terdapat 2 laporan yang harus dia buat, yaitu laporan daftar peringkat pesan error terbanyak yang dibuat oleh ticky dan laporan penggunaan user pada aplikasi ticky. Untuk membuat laporan tersebut, Ryujin harus melakukan beberapa hal berikut:
+a. Mengumpulkan informasi dari log aplikasi yang terdapat pada file syslog.log. Informasi yang diperlukan antara lain: jenis log (ERROR/INFO), pesan log, dan username pada setiap baris lognya. Karena Ryujin merasa kesulitan jika harus memeriksa satu per satu baris secara manual, dia menggunakan regex untuk mempermudah pekerjaannya. Bantulah Ryujin membuat regex tersebut.
+b. Kemudian, Ryujin harus menampilkan semua pesan error yang muncul beserta jumlah kemunculannya.
+c. Ryujin juga harus dapat menampilkan jumlah kemunculan log ERROR dan INFO untuk setiap user-nya.
+
+Setelah semua informasi yang diperlukan telah disiapkan, kini saatnya Ryujin menuliskan semua informasi tersebut ke dalam laporan dengan format file csv.
+
+d. Semua informasi yang didapatkan pada poin b dituliskan ke dalam file error_message.csv dengan header Error,Count yang kemudian diikuti oleh daftar pesan error dan jumlah kemunculannya diurutkan berdasarkan jumlah kemunculan pesan error dari yang terbanyak.
+Contoh:
+```
+Error,Count
+Permission denied,5
+File not found,3
+Failed to connect to DB,2
+```
+e. Semua informasi yang didapatkan pada poin c dituliskan ke dalam file user_statistic.csv dengan header Username,INFO,ERROR diurutkan berdasarkan username secara ascending.
+Contoh:
+```
+Username,INFO,ERROR
+kaori02,6,0
+kousei01,2,2
+ryujin.1203,1,3
+```
+Catatan :
+Setiap baris pada file syslog.log mengikuti pola berikut:
+```
+ <time> <hostname> <app_name>: <log_type> <log_message> (<username>)
+```
+Tidak boleh menggunakan AWK
+
+#### **_Jawaban_**
+Pada soal nomor 1, diberikan data syslog.log yang berisikan data sebagai berikut:
+```
+. . .
+Jan 31 05:18:45 ubuntu.local ticky: ERROR Tried to add information to closed ticket (sri)
+Jan 31 05:23:14 ubuntu.local ticky: INFO Commented on ticket [#1097] (breee)
+. . .
+```
+
+### A.
+```
+grep "ticky" syslog.log | cut -f6- -d' '
+printf '\n'
+```
+Pada soal ini, diminta untuk mengumpulkan informasi dari setiap baris pada `syslog.log` berupa `<log_type> <log_message> (<username>)`.
+- `grep "ticky" syslog.log` digunakan untuk mengambil isi dari file `syslog.log` yang harus memiliki kata `ticky`
+- `cut -f6- -d' '` digunakan untuk memotong isi dari file dengan jarak tertentu dengan delimiter spasi " " dimulai dari field ke-6
+
+Hasil ketika dijalankan pada tampilan terminal
+```
+. . .
+ERROR Tried to add information to closed ticket (sri)
+INFO Commented on ticket [#1097] (breee)
+. . .
+```
+
+### B.
+```
+grep "ERROR" syslog.log | cut -f7- -d' ' | cut -f1 -d'(' | sort | uniq -c
+printf '\n'
+```
+Pada soal ini, diminta untuk mengumpulkan dan menampilkan jumlah kemunculan semua pesan error yang muncul.
+- `grep "ERROR" syslog.log` digunakan untuk mengambil isi dari file `syslog.log` yang harus memiliki kata `ERROR`
+- `cut -f7- -d' ' | cut -f1 -d'('` digunakan untuk memotong isi dari file dengan jarak tertentu dengan delimiter spasi " " dimulai dari field ke-7 dan diakhiri dengan demilimter kurung buka "(", dimana isi dari file mengandung pesan error dan mengabaikan usernamenya.
+- `sort | uniq -c` digunakan untuk mengurutkan isi dari file berdasarkan ASCII serta mengumpulkan dan menghitung banyak line yang sama.
+
+Hasil ketika dijalankan pada tampilan terminal
+```
+     13 Connection to DB failed 
+     10 Permission denied while closing ticket 
+      9 The ticket was modified while updating 
+      7 Ticket doesn't exist 
+     15 Timeout while retrieving information 
+     12 Tried to add information to closed ticket 
+```
+
+### C.
+```
+printf 'Jumlah LOG ERROR per USER:\n'
+grep "ERROR" syslog.log | cut -f2 -d'(' | cut -f1 -d')' | sort | uniq -c
+printf 'Jumlah LOG INFO per USER:\n'
+grep "INFO" syslog.log | cut -f2 -d'(' | cut -f1 -d')' | sort | uniq -c
+printf '\n'
+```
+Pada soal ini, diminta untuk mengumpulkan dan menampilkan jumlah kemunculan log ERROR dan INFO untuk setiap user-nya
+- `grep "ERROR/INFO" syslog.log` digunakan untuk mengambil isi dari file `syslog.log` yang harus memiliki kata `ERROR/INFO`
+- `cut -f2 -d'(' | cut -f1 -d')'` digunakan untuk memotong isi dari file dengan jarak tertentu dengan delimiter kurung buka "(" dimulai dari field ke-7 dan diakhiri dengan demilimter kurung tutup ")", dimana isi dari file hanya mengandung username.
+- `sort | uniq -c` digunakan untuk mengurutkan isi dari file berdasarkan ASCII serta mengumpulkan dan menghitung banyak line yang sama.
+
+Hasil ketika dijalankan pada tampilan terminal
+```
+Jumlah Kemunculan LOG ERROR setiap User :
+     . . .
+      5 flavia
+      4 jackowens
+      . . .
+Jumlah Kemunculan LOG INFO setiap User :
+     . . .
+      2 kirknixon
+      4 mcintosh
+      . . .
+```
+
+### D.
+```
+echo Error,Count >> error_message.csv
+grep "ERROR" syslog.log | cut -f8- -d' ' | cut -f1 -d'(' | sort | uniq -c | sort -nr | while read count text
+do
+    echo $text,$count >> error_message.csv
+done
+```
+Pada soal ini, diminta untuk membuat file error_message.csv dengan header Error,Count dari data yang didapatkan pada soal B.
+- `echo Error,Count >> error_message.csv` digunakan untuk membuat file error_message.csv dan memasukkan data Error,Count sebagai header pada file tersebut.
+- `grep "ERROR" syslog.log` digunakan untuk mengambil isi dari file `syslog.log` yang harus memiliki kata `ERROR`
+- `cut -f8- -d' ' | cut -f1 -d'('` digunakan untuk memotong isi dari file dengan jarak tertentu dengan delimiter spasi " " dimulai dari field ke-8 dan diakhiri dengan demilimter kurung buka "(", dimana isi dari file mengandung pesan error dan mengabaikan usernamenya.
+- `sort | uniq -c` digunakan untuk mengurutkan isi dari file berdasarkan ASCII serta mengumpulkan dan menghitung banyak line yang sama.
+- `sort -nr` digunakan untuk mengurutkan data secara numerik dari yang terbesar ke terkecil.
+- `while read count text` digunakan untuk menyimpan nilai ke variabel count dan text yang berisikan, count jumlah kemunculan pesan `ERROR` dan text isi dari pesan tersebut.
+- `echo $text,$count >> error_message.csv` digunakan untuk memasukkan data dari variabel text dan count ke file error_message.csv.
+
+### E.
+```
+echo Username,INFO,ERROR >> user_statistic.csv
+grep "ticky" syslog.log | cut -f2 -d'(' | cut -f1 -d')' | sort | uniq -c | while read count name
+do
+    info=`grep "INFO" syslog.log | grep -w "$name" | wc -l`
+    error=`grep "ERROR" syslog.log | grep -w "$name" | wc -l`
+    echo $name,$info,$error >> user_statistic.csv
+done
+```
+Pada soal ini, diminta untuk membuat file user_statistic.csv dengan header Username,INFO,ERROR dari data yang didapatkan pada soal C.
+- `echo Username,INFO,ERROR >> user_statistic.csv` digunakan untuk membuat file user_statistic.csv dan memasukkan data Username,INFO,ERROR sebagai header pada file tersebut.
+- `grep "ticky" syslog.log` digunakan untuk mengambil isi dari file `syslog.log` yang harus memiliki kata `ticky`
+- `cut -f2 -d'(' | cut -f1 -d')'` digunakan untuk memotong isi dari file dengan jarak tertentu dengan delimiter kurung buka "(" dimulai dari field ke-7 dan diakhiri dengan demilimter kurung tutup ")", dimana isi dari file hanya mengandung username.
+- `sort | uniq -c` digunakan untuk mengurutkan isi dari file berdasarkan ASCII serta mengumpulkan dan menghitung banyak line yang sama.
+- `while read count name` digunakan untuk menyimpan nilai ke variabel count dan text yang berisikan, count jumlah kemunculan pesan dan text isi dari pesan tersebut.
+- `` info/error=`grep "INFO/ERROR" syslog.log | grep -w "$name" | wc -l` `` variabel ini digunakan untuk mencari dan memisahkan pesan `INFO` dan `ERROR` pada file syslog.log, `grep -w "$name"` digunakan untuk mencari username yang sesuai dengan variabel name, `wc -l` digunakan untuk menghitung baris hasil dari grep data yang telah di saring
+- `echo $name,$info,$error >> user_statistic.csv` digunakan untuk memasukkan data dari variabel name, info dan error ke file user_statistic.csv.
+
 ## Soal 2
 Steven dan Manis mendirikan sebuah _startup_ bernama “TokoShiSop”. Sedangkan kamu dan Clemong adalah karyawan pertama dari TokoShiSop. Setelah tiga tahun bekerja, Clemong diangkat menjadi manajer penjualan TokoShiSop, sedangkan kamu menjadi kepala gudang yang mengatur keluar masuknya barang.
 

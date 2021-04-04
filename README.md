@@ -119,7 +119,7 @@ Jumlah Kemunculan LOG INFO setiap User :
 ### D.
 ```
 echo Error,Count >> error_message.csv
-grep "ERROR" syslog.log | cut -f8- -d' ' | cut -f1 -d'(' | sort | uniq -c | sort -nr | while read count text
+grep "ERROR" syslog.log | cut -f7- -d' ' | cut -f1 -d'(' | sort | uniq -c | sort -nr | while read count text
 do
     echo $text,$count >> error_message.csv
 done
@@ -127,7 +127,7 @@ done
 Pada soal ini, diminta untuk membuat file error_message.csv dengan header Error,Count dari data yang didapatkan pada soal B.
 - `echo Error,Count >> error_message.csv` digunakan untuk membuat file error_message.csv dan memasukkan data Error,Count sebagai header pada file tersebut.
 - `grep "ERROR" syslog.log` digunakan untuk mengambil isi dari file _syslog.log_ yang harus memiliki kata _ERROR_
-- `cut -f8- -d' ' | cut -f1 -d'('` digunakan untuk memotong isi dari file dengan jarak tertentu dengan delimiter spasi " " dimulai dari field ke-8 dan diakhiri dengan demilimter kurung buka "(", dimana isi dari file mengandung pesan error dan mengabaikan usernamenya.
+- `cut -f7- -d' ' | cut -f1 -d'('` digunakan untuk memotong isi dari file dengan jarak tertentu dengan delimiter spasi " " dimulai dari field ke-7 dan diakhiri dengan demilimter kurung buka "(", dimana isi dari file mengandung pesan error dan mengabaikan usernamenya.
 - `sort | uniq -c` digunakan untuk mengurutkan isi dari file berdasarkan ASCII serta mengumpulkan dan menghitung banyak line yang sama.
 - `sort -nr` digunakan untuk mengurutkan data secara numerik dari yang terbesar ke terkecil.
 - `while read count text` digunakan untuk menyimpan nilai ke variabel count dan text yang berisikan, count jumlah kemunculan pesan _ERROR_ dan text isi dari pesan tersebut.
@@ -151,6 +151,11 @@ Pada soal ini, diminta untuk membuat file user_statistic.csv dengan header Usern
 - `while read count name` digunakan untuk menyimpan nilai ke variabel count dan text yang berisikan, count jumlah kemunculan pesan dan text isi dari pesan tersebut.
 - `` info/error=`grep "INFO/ERROR" syslog.log | grep -w "$name" | wc -l` `` variabel ini digunakan untuk mencari dan memisahkan pesan _INFO_ dan _ERROR_ pada file _syslog.log_, `grep -w "$name"` digunakan untuk mencari username yang sesuai dengan variabel name, `wc -l` digunakan untuk menghitung baris hasil dari grep data yang telah di saring.
 - `echo $name,$info,$error >> user_statistic.csv` digunakan untuk memasukkan data dari variabel name, info dan error ke file user_statistic.csv.
+
+### Kesulitan
+- Kesulitan mencari refenrensi untuk menggunakan regex yang sesuai.
+- Kesulitan dalam memahami fungsi `cut`.
+- Pada soal E, kesulitan untuk menghitung ERROR dan INFO pada setiap usernya sebelum mengetahui regex yang sesuai.
 
 ## Soal 2
 Steven dan Manis mendirikan sebuah _startup_ bernama “TokoShiSop”. Sedangkan kamu dan Clemong adalah karyawan pertama dari TokoShiSop. Setelah tiga tahun bekerja, Clemong diangkat menjadi manajer penjualan TokoShiSop, sedangkan kamu menjadi kepala gudang yang mengatur keluar masuknya barang.
